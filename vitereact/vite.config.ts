@@ -47,3 +47,4 @@ export default defineConfig({
 		outDir: "public",
 	},
 });
+
