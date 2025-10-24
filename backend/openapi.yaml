@@ -1,0 +1,935 @@
+openapi: 3.0.0
+info:
+  title: eco11 API Specification
+  version: 1.0.0
+  description: User-facing API for eco11 sustainable living platform
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - username
+        - email
+        - password_hash
+        - created_at
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        password_hash:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    CreateUserInput:
+      type: object
+      required:
+        - username
+        - email
+        - password_hash
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password_hash:
+          type: string
+    UpdateUserInput:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password_hash:
+          type: string
+    SearchUserInput:
+      type: object
+      properties:
+        query:
+          type: string
+        user_id:
+          type: string
+        limit:
+          type: integer
+          default: 10
+        offset:
+          type: integer
+          default: 0
+        sort_by:
+          type: string
+          enum:
+            - username
+            - email
+            - created_at
+          default: created_at
+        sort_order:
+          type: string
+          enum:
+            - asc
+            - desc
+          default: desc
+    Post:
+      type: object
+      required:
+        - id
+        - user_id
+        - title
+        - content
+        - created_at
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        image_url:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    CreatePostInput:
+      type: object
+      required:
+        - user_id
+        - title
+        - content
+      properties:
+        user_id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        image_url:
+          type: string
+          nullable: true
+    UpdatePostInput:
+      type: object
+      properties:
+        user_id:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        image_url:
+          type: string
+          nullable: true
+    SearchPostInput:
+      type: object
+      properties:
+        query:
+          type: string
+        user_id:
+          type: string
+        include_image:
+          type: boolean
+        limit:
+          type: integer
+          default: 10
+        offset:
+          type: integer
+          default: 0
+        sort_by:
+          type: string
+          enum:
+            - title
+            - created_at
+            - user_id
+          default: created_at
+        sort_order:
+          type: string
+          enum:
+            - asc
+            - desc
+          default: desc
+    Comment:
+      type: object
+      required:
+        - id
+        - user_id
+        - post_id
+        - content
+        - created_at
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        post_id:
+          type: string
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    CreateCommentInput:
+      type: object
+      required:
+        - user_id
+        - post_id
+        - content
+      properties:
+        user_id:
+          type: string
+        post_id:
+          type: string
+        content:
+          type: string
+    UpdateCommentInput:
+      type: object
+      properties:
+        user_id:
+          type: string
+        post_id:
+          type: string
+        content:
+          type: string
+    SearchCommentInput:
+      type: object
+      properties:
+        query:
+          type: string
+        user_id:
+          type: string
+        post_id:
+          type: string
+        limit:
+          type: integer
+          default: 10
+        offset:
+          type: integer
+          default: 0
+        sort_by:
+          type: string
+          enum:
+            - content
+            - created_at
+          default: created_at
+        sort_order:
+          type: string
+          enum:
+            - asc
+            - desc
+          default: desc
+    Like:
+      type: object
+      required:
+        - user_id
+        - post_id
+        - created_at
+      properties:
+        user_id:
+          type: string
+        post_id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    CreateLikeInput:
+      type: object
+      required:
+        - user_id
+        - post_id
+      properties:
+        user_id:
+          type: string
+        post_id:
+          type: string
+    SearchLikeInput:
+      type: object
+      properties:
+        user_id:
+          type: string
+        post_id:
+          type: string
+        limit:
+          type: integer
+          default: 10
+        offset:
+          type: integer
+          default: 0
+        sort_by:
+          type: string
+          enum:
+            - created_at
+          default: created_at
+        sort_order:
+          type: string
+          enum:
+            - asc
+            - desc
+          default: desc
+  parameters:
+    UserIdParam:
+      name: user_id
+      in: path
+      required: true
+      schema:
+        type: string
+    PostIdParam:
+      name: post_id
+      in: path
+      required: true
+      schema:
+        type: string
+    CommentIdParam:
+      name: comment_id
+      in: path
+      required: true
+      schema:
+        type: string
+    SearchUserParams:
+      type: object
+      properties:
+        query:
+          type: string
+        user_id:
+          type: string
+        limit:
+          type: integer
+        offset:
+          type: integer
+        sort_by:
+          type: string
+          enum:
+            - username
+            - email
+            - created_at
+        sort_order:
+          type: string
+          enum:
+            - asc
+            - desc
+      required: []
+    SearchPostParams:
+      type: object
+      properties:
+        query:
+          type: string
+        user_id:
+          type: string
+        include_image:
+          type: boolean
+        limit:
+          type: integer
+        offset:
+          type: integer
+        sort_by:
+          type: string
+          enum:
+            - title
+            - created_at
+            - user_id
+        sort_order:
+          type: string
+          enum:
+            - asc
+            - desc
+      required: []
+    SearchCommentParams:
+      type: object
+      properties:
+        query:
+          type: string
+        user_id:
+          type: string
+        post_id:
+          type: string
+        limit:
+          type: integer
+        offset:
+          type: integer
+        sort_by:
+          type: string
+          enum:
+            - content
+            - created_at
+        sort_order:
+          type: string
+          enum:
+            - asc
+            - desc
+      required: []
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  /auth/signup:
+    post:
+      summary: Register a new user
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserInput"
+      responses:
+        "201":
+          description: Created user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Validation error
+  /auth/login:
+    post:
+      summary: Authenticate user
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password_hash
+              properties:
+                email:
+                  type: string
+                password_hash:
+                  type: string
+      responses:
+        "200":
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    $ref: "#/components/schemas/User"
+  /users:
+    get:
+      summary: Search users
+      operationId: searchUsers
+      parameters:
+        $ref: "#/components/parameters/SearchUserParams"
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+  /users/{user_id}:
+    get:
+      summary: Get user profile
+      operationId: getUserById
+      parameters:
+        - $ref: "#/components/parameters/UserIdParam"
+      responses:
+        "200":
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    patch:
+      summary: Update user profile
+      operationId: updateUser
+      security:
+        - jwtAuth: []
+      parameters:
+        - $ref: "#/components/parameters/UserIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserInput"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    delete:
+      summary: Delete user account
+      operationId: deleteUser
+      security:
+        - jwtAuth: []
+      parameters:
+        - $ref: "#/components/parameters/UserIdParam"
+      responses:
+        "204":
+          description: User deleted
+  /posts:
+    get:
+      summary: Search posts
+      operationId: searchPosts
+      parameters:
+        $ref: "#/components/parameters/SearchPostParams"
+      responses:
+        "200":
+          description: List of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+    post:
+      summary: Create new post
+      operationId: createPost
+      security:
+        - jwtAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePostInput"
+      responses:
+        "201":
+          description: Created post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+  /posts/{post_id}:
+    get:
+      summary: Get post details
+      operationId: getPostById
+      parameters:
+        - $ref: "#/components/parameters/PostIdParam"
+      responses:
+        "200":
+          description: Post details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+    patch:
+      summary: Update post
+      operationId: updatePost
+      security:
+        - jwtAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PostIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePostInput"
+      responses:
+        "200":
+          description: Updated post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+    delete:
+      summary: Delete post
+      operationId: deletePost
+      security:
+        - jwtAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PostIdParam"
+      responses:
+        "204":
+          description: Post deleted
+  /posts/{post_id}/comments:
+    get:
+      summary: Get post comments
+      operationId: searchPostComments
+      parameters:
+        - $ref: "#/components/parameters/PostIdParam"
+      responses:
+        "200":
+          description: List of comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Comment"
+    post:
+      summary: Create comment
+      operationId: createComment
+      security:
+        - jwtAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCommentInput"
+      responses:
+        "201":
+          description: Created comment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+  /comments/{comment_id}:
+    get:
+      summary: Get comment details
+      operationId: getCommentById
+      parameters:
+        - $ref: "#/components/parameters/CommentIdParam"
+      responses:
+        "200":
+          description: Comment details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+    patch:
+      summary: Update comment
+      operationId: updateComment
+      security:
+        - jwtAuth: []
+      parameters:
+        - $ref: "#/components/parameters/CommentIdParam"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCommentInput"
+      responses:
+        "200":
+          description: Updated comment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Comment"
+    delete:
+      summary: Delete comment
+      operationId: deleteComment
+      security:
+        - jwtAuth: []
+      parameters:
+        - $ref: "#/components/parameters/CommentIdParam"
+      responses:
+        "204":
+          description: Comment deleted
+  /posts/{post_id}/likes:
+    post:
+      summary: Like a post
+      operationId: createPostLike
+      security:
+        - jwtAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PostIdParam"
+      responses:
+        "201":
+          description: Post liked
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Like"
+    delete:
+      summary: Unlike a post
+      operationId: deletePostLike
+      security:
+        - jwtAuth: []
+      parameters:
+        - $ref: "#/components/parameters/PostIdParam"
+      responses:
+        "204":
+          description: Post unliked
+  /users/{user_id}/posts:
+    get:
+      summary: Get user's posts
+      operationId: searchUserPosts
+      parameters:
+        - $ref: "#/components/parameters/UserIdParam"
+      responses:
+        "200":
+          description: User's posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+  /users/{user_id}/likes:
+    get:
+      summary: Get user's likes
+      operationId: searchUserLikes
+      parameters:
+        - $ref: "#/components/parameters/UserIdParam"
+      responses:
+        "200":
+          description: User's likes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Like"
+  /education:
+    get:
+      summary: Search educational content
+      operationId: searchEducationalContent
+      parameters:
+        content_type:
+          type: string
+          in: query
+          enum:
+            - article
+            - video
+            - quiz
+      responses:
+        "200":
+          description: Educational content list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+  /marketplace:
+    get:
+      summary: Search marketplace products
+      operationId: searchMarketplaceProducts
+      parameters:
+        category:
+          type: string
+          in: query
+        price_min:
+          type: number
+          in: query
+        price_max:
+          type: number
+          in: query
+        impact_min:
+          type: number
+          in: query
+        impact_max:
+          type: number
+          in: query
+      responses:
+        "200":
+          description: Marketplace products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+  /challenges:
+    get:
+      summary: List available challenges
+      operationId: listChallenges
+      responses:
+        "200":
+          description: Challenge list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+    post:
+      summary: Join a challenge
+      operationId: joinChallenge
+      security:
+        - jwtAuth: []
+      responses:
+        "200":
+          description: Challenge joined
+  /business/profile:
+    get:
+      summary: Get business profile
+      operationId: getBusinessProfile
+      security:
+        - jwtAuth: []
+      responses:
+        "200":
+          description: Business profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    patch:
+      summary: Update business profile
+      operationId: updateBusinessProfile
+      security:
+        - jwtAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserInput"
+      responses:
+        "200":
+          description: Business profile updated
+  /family/setup:
+    post:
+      summary: Create family group
+      operationId: createFamilyGroup
+      security:
+        - jwtAuth: []
+      responses:
+        "201":
+          description: Family group created
+  /tracker:
+    get:
+      summary: Get footprint data
+      operationId: getFootprintData
+      security:
+        - jwtAuth: []
+      parameters:
+        category:
+          type: string
+          in: query
+          enum:
+            - transportation
+            - energy
+            - diet
+            - shopping
+            - waste
+            - water
+        date_range:
+          type: string
+          in: query
+          enum:
+            - 7d
+            - 30d
+            - 90d
+            - ytd
+      responses:
+        "200":
+          description: Footprint data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_co2:
+                    type: number
+                  breakdown:
+                    type: object
+                    additionalProperties:
+                      type: number
+  /recommendations:
+    get:
+      summary: Get personalized recommendations
+      operationId: getUserRecommendations
+      security:
+        - jwtAuth: []
+      parameters:
+        category:
+          type: string
+          in: query
+          enum:
+            - transportation
+            - energy
+            - diet
+            - shopping
+            - waste
+            - water
+      responses:
+        "200":
+          description: Recommendations list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+  /carbon-offset:
+    post:
+      summary: Purchase carbon offset credits
+      operationId: purchaseCarbonOffset
+      security:
+        - jwtAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+              required:
+                - amount
+      responses:
+        "200":
+          description: Offset purchase confirmed
+  /notifications:
+    get:
+      summary: Get user notifications
+      operationId: getUserNotifications
+      security:
+        - jwtAuth: []
+      responses:
+        "200":
+          description: Notifications list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    message:
+                      type: string
+                    read:
+                      type: boolean
+    post:
+      summary: Mark notification as read
+      operationId: markNotificationRead
+      security:
+        - jwtAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notification_id:
+                  type: string
+              required:
+                - notification_id
+      responses:
+        "200":
+          description: Notification marked as read
+tags:
+  - name: auth
+    description: Authentication operations
+  - name: users
+    description: User management
+  - name: posts
+    description: Social posts and interactions
+  - name: community
+    description: Community features and challenges
+  - name: education
+    description: Educational content
+  - name: marketplace
+    description: Eco-product marketplace
+  - name: tracker
+    description: Carbon footprint tracking
+  - name: recommendations
+    description: Personalized eco-recommendations

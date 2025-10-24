@@ -1,0 +1,19 @@
+{
+  "timestamp": 1761308461286,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_ProductDetails",
+      "version": "1761308395680"
+    }
+  },
+  "projectId": "eco11",
+  "files": [
+    {
+      "path": "/mnt/data/eco11/vitereact/src/components/views/UV_ProductDetails.tsx",
+      "type": "text",
+      "size": 10139,
+      "dependencies": false
+    }
+  ]
+}

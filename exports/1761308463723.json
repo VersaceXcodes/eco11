@@ -1,0 +1,19 @@
+{
+  "timestamp": 1761308463723,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_FamilySetup",
+      "version": "latest"
+    }
+  },
+  "projectId": "eco11",
+  "files": [
+    {
+      "path": "/mnt/data/eco11/vitereact/src/components/views/UV_FamilySetup.tsx",
+      "type": "text",
+      "size": 10997,
+      "dependencies": false
+    }
+  ]
+}

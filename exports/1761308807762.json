@@ -1,0 +1,19 @@
+{
+  "timestamp": 1761308807762,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_Footer",
+      "version": "latest"
+    }
+  },
+  "projectId": "eco11",
+  "files": [
+    {
+      "path": "/mnt/data/eco11/vitereact/src/components/views/GV_Footer.tsx",
+      "type": "text",
+      "size": 3235,
+      "dependencies": false
+    }
+  ]
+}

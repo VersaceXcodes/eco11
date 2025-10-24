@@ -1,0 +1,276 @@
+asyncapi: 2.0.0
+info:
+  title: eco11 Realtime Features AsyncAPI Specification
+  description: Realtime events for eco11 sustainability platform covering
+    community interactions, carbon tracking updates, and social features
+  version: 1.0.0
+servers:
+  local-dev:
+    url: http://localhost:3000
+    protocol: websocket
+    description: Development server for realtime connections
+channels:
+  post.created:
+    subscribe:
+      message:
+        payload:
+          $ref: "#/components/schemas/Post"
+    description: Realtime notification when a new community post is created
+  post.updated:
+    subscribe:
+      message:
+        payload:
+          $ref: "#/components/schemas/Post"
+    description: Realtime update when a community post is modified
+  post.deleted:
+    subscribe:
+      message:
+        payload:
+          $ref: "#/components/schemas/Post"
+    description: Realtime notification when a community post is removed
+  comment.created:
+    subscribe:
+      message:
+        payload:
+          $ref: "#/components/schemas/Comment"
+    description: Realtime notification when a new comment is added to a post
+  comment.updated:
+    subscribe:
+      message:
+        payload:
+          $ref: "#/components/schemas/Comment"
+    description: Realtime update when a comment is modified
+  comment.deleted:
+    subscribe:
+      message:
+        payload:
+          $ref: "#/components/schemas/Comment"
+    description: Realtime notification when a comment is removed
+  like.created:
+    subscribe:
+      message:
+        payload:
+          $ref: "#/components/schemas/Like"
+    description: Realtime notification when a user likes a post
+  like.deleted:
+    subscribe:
+      message:
+        payload:
+          $ref: "#/components/schemas/Like"
+    description: Realtime notification when a user unlikes a post
+  activity.logged:
+    subscribe:
+      message:
+        payload:
+          type: object
+          properties:
+            user_id:
+              type: string
+              description: ID of the user who logged the activity
+            category:
+              type: string
+              enum:
+                - transportation
+                - home_energy
+                - diet
+                - shopping
+                - waste
+                - water
+              description: Type of activity logged
+            impact:
+              type: number
+              description: Carbon footprint impact of the activity (kg CO2)
+            timestamp:
+              type: string
+              format: date-time
+          required:
+            - user_id
+            - category
+            - impact
+            - timestamp
+    description: Realtime event when a user logs a new activity
+  goal.updated:
+    subscribe:
+      message:
+        payload:
+          type: object
+          properties:
+            user_id:
+              type: string
+              description: ID of the user who updated their goal
+            category:
+              type: string
+              enum:
+                - transportation
+                - home_energy
+                - diet
+                - shopping
+                - waste
+                - water
+              description: Category of the updated goal
+            target:
+              type: number
+              description: New target value for the goal
+            timeframe:
+              type: string
+              description: Timeframe for achieving the goal (e.g., "30d")
+          required:
+            - user_id
+            - category
+            - target
+            - timeframe
+    description: Realtime update when a user modifies their carbon reduction goal
+  challenge.progress:
+    subscribe:
+      message:
+        payload:
+          type: object
+          properties:
+            challenge_id:
+              type: string
+              description: ID of the challenge being tracked
+            user_id:
+              type: string
+              description: ID of the participating user
+            progress:
+              type: number
+              description: Current progress percentage (0-100)
+            achievements:
+              type: array
+              items:
+                type: object
+                properties:
+                  activity_id:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+          required:
+            - challenge_id
+            - user_id
+            - progress
+    description: Realtime updates for challenge participation progress
+  recommendation.updated:
+    subscribe:
+      message:
+        payload:
+          type: object
+          properties:
+            user_id:
+              type: string
+              description: ID of the user receiving recommendations
+            recommendations:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  impact:
+                    type: number
+                  difficulty:
+                    type: string
+                    enum:
+                      - beginner
+                      - intermediate
+                      - advanced
+                  status:
+                    type: string
+                    enum:
+                      - pending
+                      - completed
+                      - ignored
+          required:
+            - user_id
+            - recommendations
+    description: Realtime update when user recommendations are refreshed or modified
+components:
+  schemas:
+    Post:
+      type: object
+      required:
+        - id
+        - user_id
+        - title
+        - content
+        - created_at
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        content:
+          type: string
+          minLength: 1
+        image_url:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+    Comment:
+      type: object
+      required:
+        - id
+        - user_id
+        - post_id
+        - content
+        - created_at
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        post_id:
+          type: string
+        content:
+          type: string
+          minLength: 1
+        created_at:
+          type: string
+          format: date-time
+    Like:
+      type: object
+      required:
+        - user_id
+        - post_id
+        - created_at
+      properties:
+        user_id:
+          type: string
+        post_id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    User:
+      type: object
+      required:
+        - id
+        - username
+        - email
+        - created_at
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+          minLength: 1
+          maxLength: 50
+        email:
+          type: string
+          minLength: 1
+          maxLength: 100
+          format: email
+        password_hash:
+          type: string
+          minLength: 8
+        created_at:
+          type: string
+          format: date-time
